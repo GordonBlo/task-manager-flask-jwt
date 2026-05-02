@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager V2 - Register</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <main class="container">
+        <h1>Task Manager V2</h1>
+        <h2>Register</h2>
+
+        <form id="register-form">
+            <input type="text" id="username" placeholder="Username" />
+            <input type="email" id="email" placeholder="Email" />
+            <input type="password" id="password" placeholder="Password" />
+            <button type="submit">Register</button>
+        </form>
+
+        <h2>Login</h2>
+
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email" required />
+            <input type="password" id="login-password" placeholder="Password" required />
+            <button type="submit">Login</button>
+        </form>
+
+        <h3>Add Task</h3>
+
+        <form id="task-form">
+            <input type="text" id="task-title" placeholder="Task title" required />
+            <input type="text" id="task-description" placeholder="Task description" />
+            <button type="submit">Add Task</button>
+        </form>
+
+        <p id="task-message"></p>
+
+        <h2>My Tasks</h2>
+        <button type="submit" id="load-tasks-btn">Load Tasks</button>
+        <div id="tasks-output"></div>
+
+        <p id="login-message"></p>
+
+        <p id="register-message"></p>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f7fb;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 400px;
+  margin: 60px auto;
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+h1, h2 {
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+input, button {
+  padding: 12px;
+  font-size: 16px;
+}
+
+button {
+  cursor: pointer;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+#register-message {
+  margin-top: 16px;
+  text-align: center;
+  font-weight: bold;
+}
+
+#tasks-output {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-card {
+  background: #ffffff;
+  border: 1px solid #dbe3ec;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.task-card h3 {
+  margin: 0 0 8px 0;
+}
+
+.task-card p {
+  margin: 4px 0;
+}
+
+.task-status {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.task-done {
+  color: green;
+}
+
+.task-not-done {
+  color: red;
+}
+.danger-btn {
+  margin-left: 10px;
+  background: #dc2626;
+}
+
+.danger-btn:hover {
+  background: #b91c1c;
+}

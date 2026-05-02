@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel – Task Manager</title>
+<link href="admin.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-title">Admin Panel</div>
+    <div class="login-sub">// task_manager v2.0</div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="admin@example.com">
+    </div>
+    <div class="field">
+      <label>Jelszó</label>
+      <input type="password" id="loginPassword" placeholder="••••••••">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Bejelentkezés</button>
+    <div class="login-error" id="loginError">Hibás email vagy jelszó</div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-text">Task Manager</div>
+    <div class="logo-sub">admin dashboard</div>
+  </div>
+  <nav>
+    <div class="nav-item active" onclick="switchTab('users', this)">
+      <span class="nav-icon">👤</span> Felhasználók
+    </div>
+    <div class="nav-item" onclick="switchTab('logs', this)">
+      <span class="nav-icon">📋</span> Login logok
+    </div>
+    <div class="nav-item" onclick="switchTab('tasks', this)">
+      <span class="nav-icon">✅</span> Task-ok
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <span class="status-dot"></span>backend online
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="page-title" id="pageTitle">Felhasználók</div>
+    <div class="topbar-right">
+      <button class="refresh-btn" onclick="loadAll()">↻ FRISSÍTÉS</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card users">
+        <div class="stat-label">Felhasználók</div>
+        <div class="stat-value" id="statUsers">—</div>
+      </div>
+      <div class="stat-card logs">
+        <div class="stat-label">Login események</div>
+        <div class="stat-value" id="statLogs">—</div>
+      </div>
+      <div class="stat-card tasks">
+        <div class="stat-label">Task-ok</div>
+        <div class="stat-value" id="statTasks">—</div>
+      </div>
+    </div>
+
+    <!-- USERS PANEL -->
+    <div class="panel active" id="panel-users">
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">Regisztrált felhasználók</span>
+          <span class="table-count" id="countUsers">0 sor</span>
+        </div>
+        <div id="usersTable"><div class="loading">betöltés...</div></div>
+      </div>
+    </div>
+
+    <!-- LOGS PANEL -->
+    <div class="panel" id="panel-logs">
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">Bejelentkezési előzmények</span>
+          <span class="table-count" id="countLogs">0 sor</span>
+        </div>
+        <div id="logsTable"><div class="loading">betöltés...</div></div>
+      </div>
+    </div>
+
+    <!-- TASKS PANEL -->
+    <div class="panel" id="panel-tasks">
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">Összes task</span>
+          <span class="table-count" id="countTasks">0 sor</span>
+        </div>
+        <div id="tasksTable"><div class="loading">betöltés...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
