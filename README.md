@@ -20,6 +20,17 @@ A projekt célja: bemutatni egy egyszerű, de strukturált webalkalmazást, amel
 - SQLite adatbázis
 - Route / Service / Repository rétegezés
 
+## Screenshots
+
+### Home / Authentication Page
+![Home Page](screenshots/home.png)
+
+### Task Dashboard
+![Task Dashboard](screenshots/tasks.png)
+
+### Admin Panel
+![Admin Panel](screenshots/admin.png)
+
 ## Tech stack
 
 - Python
