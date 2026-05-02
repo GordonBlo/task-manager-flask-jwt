@@ -1,37 +1,40 @@
 # Task Manager v2
 
-Python Flask alapú feladatkezelő alkalmazás junior backend / full-stack portfólióprojekthez.
+A Python Flask-based task management application built as a junior backend / full-stack portfolio project.
 
-A projekt célja: bemutatni egy egyszerű, de strukturált webalkalmazást, amelyben a felhasználók regisztrálnak, bejelentkeznek, majd saját taskjaikat kezelik.
+The goal of this project is to demonstrate a simple but structured web application where users can register, log in, and manage their own tasks.
 
-## Fő funkciók
+## Main Features
 
-- Felhasználó regisztráció
-- Jelszó hash-elés Werkzeug segítségével
-- Login JWT tokennel
-- Védett task endpointok
-- Saját taskok listázása
-- Task létrehozása
-- Task állapotának váltása
-- Task törlése
-- Egyszerű HTML/CSS/JavaScript frontend
-- Admin dashboard alapok
-- Login események naplózása
-- SQLite adatbázis
-- Route / Service / Repository rétegezés
+- User registration
+- Password hashing with Werkzeug
+- Login with JWT token authentication
+- Protected task endpoints
+- Listing user-specific tasks
+- Task creation
+- Task completion status toggle
+- Task deletion
+- Simple HTML/CSS/JavaScript frontend
+- Basic admin dashboard
+- Login event logging
+- SQLite database
+- Route / Service / Repository layered structure
 
 ## Screenshots
 
 ### Home / Authentication Page
+
 ![Home Page](screenshots/home.png)
 
 ### Task Dashboard
+
 ![Task Dashboard](screenshots/tasks.png)
 
 ### Admin Panel
+
 ![Admin Panel](screenshots/admin.png)
 
-## Tech stack
+## Tech Stack
 
 - Python
 - Flask
@@ -43,7 +46,7 @@ A projekt célja: bemutatni egy egyszerű, de strukturált webalkalmazást, amel
 - CSS
 - JavaScript
 
-## Projektstruktúra
+## Project Structure
 
 ```text
 task_manager/
@@ -70,45 +73,45 @@ task_manager/
 └── utils/
 ```
 
-## Futtatás lokálisan
+## Running Locally
 
-1. Virtuális környezet létrehozása:
+1. Create a virtual environment:
 
 ```bash
 python -m venv .venv
 ```
 
-2. Aktiválás Windows alatt:
+2. Activate it on Windows:
 
 ```bash
 .venv\Scripts\activate
 ```
 
-3. Függőségek telepítése:
+3. Install the dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. App indítása:
+4. Start the application:
 
 ```bash
 python app.py
 ```
 
-5. Böngészőben:
+5. Open it in the browser:
 
 ```text
 http://127.0.0.1:5000/
 ```
 
-Admin oldal:
+Admin page:
 
 ```text
 http://127.0.0.1:5000/admin
 ```
 
-## API endpointok
+## API Endpoints
 
 ### Auth
 
@@ -136,37 +139,37 @@ GET /api/admin/logs
 GET /api/admin/tasks
 ```
 
-Az admin endpointokhoz olyan user kell, ahol az adatbázisban `is_admin = 1`.
+Admin endpoints require a user account where `is_admin = 1` in the database.
 
-## Biztonsági alapelvek
+## Security Principles
 
-- A jelszó nincs plain text formában tárolva.
-- A backend JWT alapján azonosítja a usert.
-- A task műveleteknél mindig van `user_id` szűrés.
-- Egy user csak a saját taskjait láthatja, módosíthatja és törölheti.
-- A frontend task renderelése nem közvetlen `innerHTML` stringbe helyettesíti a user által megadott task címet/leírást.
+- Passwords are not stored in plain text.
+- The backend identifies the user based on the JWT token.
+- Task operations always include `user_id` filtering.
+- A user can only view, update, and delete their own tasks.
+- The frontend task rendering does not directly inject user-provided task titles or descriptions into an `innerHTML` string.
 
-## Tanulási érték
+## Learning Value
 
-Ez a projekt bemutatja:
+This project demonstrates:
 
-- Flask route-ok működését
-- Service layer szerepét
-- Repository pattern alapjait
-- SQL CRUD műveleteket
-- JWT authentikációt
-- Userhez kötött jogosultsági logikát
-- Egyszerű frontend-backend kommunikációt
-- Portfólióprojekt dokumentálását
+- How Flask routes work
+- The role of the service layer
+- The basics of the repository pattern
+- SQL CRUD operations
+- JWT authentication
+- User-scoped authorization logic
+- Simple frontend-backend communication
+- Documentation of a portfolio project
 
-## Következő fejlesztési lehetőségek
+## Future Improvements
 
-- Task szerkesztés frontendből
-- Task priority mező
-- Due date / határidő
-- Search és filter
-- Bootstrap vagy Tailwind design
-- Unit tesztek
-- PostgreSQL támogatás
-- Deployment Render/Railway környezetbe
-- Jobb admin jogosultság-kezelés
+- Task editing from the frontend
+- Task priority field
+- Due date field
+- Search and filtering
+- Bootstrap or Tailwind-based design
+- Unit tests
+- PostgreSQL support
+- Deployment to Render or Railway
+- Improved admin permission management
