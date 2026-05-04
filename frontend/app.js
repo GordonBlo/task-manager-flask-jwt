@@ -50,14 +50,14 @@ registerForm.addEventListener("submit", async (event) => {
     const result = await parseJsonResponse(response);
 
     if (response.ok) {
-      setMessage(registerMessage, "Sikeres regisztráció!", "green");
+      setMessage(registerMessage, "Registration successful!", "green");
       registerForm.reset();
     } else {
-      setMessage(registerMessage, result.error || "Hiba történt a regisztráció során.", "red");
+      setMessage(registerMessage, result.error || "An error occurred during registration.", "red");
     }
   } catch (error) {
-    setMessage(registerMessage, "Nem sikerült kapcsolódni a backendhez.", "red");
-    console.error("Register hiba:", error);
+    setMessage(registerMessage, "Could not connect to the backend.", "red");
+    console.error("Register error:", error);
   }
 });
 
@@ -78,15 +78,15 @@ loginForm.addEventListener("submit", async (event) => {
 
     if (response.ok) {
       localStorage.setItem("token", result.token);
-      setMessage(loginMessage, "Sikeres bejelentkezés!", "green");
+      setMessage(loginMessage, "Login successful!", "green");
       loginForm.reset();
       await loadTasks();
     } else {
-      setMessage(loginMessage, result.error || "Hiba történt a bejelentkezés során.", "red");
+      setMessage(loginMessage, result.error || "An error occurred during login.", "red");
     }
   } catch (error) {
-    setMessage(loginMessage, "Nem sikerült kapcsolódni a backendhez.", "red");
-    console.error("Login hiba:", error);
+    setMessage(loginMessage, "Could not connect to the backend.", "red");
+    console.error("Login error:", error);
   }
 });
 
@@ -94,7 +94,7 @@ async function loadTasks() {
   const token = getToken();
 
   if (!token) {
-    tasksOutput.textContent = "Nincs elmentett token. Jelentkezz be először.";
+    tasksOutput.textContent = "No saved token found. Please log in first.";
     return;
   }
 
@@ -109,11 +109,11 @@ async function loadTasks() {
     if (response.ok) {
       renderTasks(result);
     } else {
-      tasksOutput.textContent = result.error || "Nem sikerült lekérni a taskokat.";
+      tasksOutput.textContent = result.error || "Failed to load tasks.";
     }
   } catch (error) {
-    tasksOutput.textContent = "Hiba történt a taskok lekérése közben.";
-    console.error("Task lekérés hiba:", error);
+    tasksOutput.textContent = "An error occurred while loading tasks.";
+    console.error("Task load error:", error);
   }
 }
 
@@ -121,7 +121,7 @@ async function toggleTask(taskId) {
   const token = getToken();
 
   if (!token) {
-    alert("Nincs token. Jelentkezz be először.");
+    alert("No token found. Please log in first.");
     return;
   }
 
@@ -136,11 +136,11 @@ async function toggleTask(taskId) {
     if (response.ok) {
       await loadTasks();
     } else {
-      alert(result.error || "Nem sikerült módosítani a task állapotát.");
+      alert(result.error || "Failed to update the task status.");
     }
   } catch (error) {
-    console.error("Toggle hiba:", error);
-    alert("Hiba történt a toggle közben.");
+    console.error("Toggle error:", error);
+    alert("An error occurred while toggling the task.");
   }
 }
 
@@ -148,11 +148,11 @@ async function deleteTask(taskId) {
   const token = getToken();
 
   if (!token) {
-    alert("Nincs token. Jelentkezz be először.");
+    alert("No token found. Please log in first.");
     return;
   }
 
-  if (!confirm("Biztosan törölni akarod ezt a taskot?")) return;
+  if (!confirm("Are you sure you want to delete this task?")) return;
 
   try {
     const response = await fetch(`${API_BASE}/tasks/${taskId}`, {
@@ -165,11 +165,11 @@ async function deleteTask(taskId) {
     if (response.ok) {
       await loadTasks();
     } else {
-      alert(result.error || "Nem sikerült törölni a taskot.");
+      alert(result.error || "Failed to delete the task.");
     }
   } catch (error) {
-    console.error("Delete hiba:", error);
-    alert("Hiba történt a törlés közben.");
+    console.error("Delete error:", error);
+    alert("An error occurred while deleting the task.");
   }
 }
 
@@ -181,7 +181,7 @@ taskForm.addEventListener("submit", async (event) => {
   const token = getToken();
 
   if (!token) {
-    setMessage(taskMessage, "Nincs token. Jelentkezz be először.", "red");
+    setMessage(taskMessage, "No token found. Please log in first.", "red");
     return;
   }
 
@@ -201,15 +201,15 @@ taskForm.addEventListener("submit", async (event) => {
     const result = await parseJsonResponse(response);
 
     if (response.ok) {
-      setMessage(taskMessage, "Task sikeresen létrehozva!", "green");
+      setMessage(taskMessage, "Task created successfully!", "green");
       taskForm.reset();
       await loadTasks();
     } else {
-      setMessage(taskMessage, result.error || "Nem sikerült létrehozni a taskot.", "red");
+      setMessage(taskMessage, result.error || "Failed to create the task.", "red");
     }
   } catch (error) {
-    setMessage(taskMessage, "Hiba történt a task létrehozása közben.", "red");
-    console.error("Task create hiba:", error);
+    setMessage(taskMessage, "An error occurred while creating the task.", "red");
+    console.error("Task create error:", error);
   }
 });
 
@@ -217,7 +217,7 @@ function renderTasks(tasks) {
   tasksOutput.replaceChildren();
 
   if (!tasks.length) {
-    tasksOutput.appendChild(createTextElement("p", "Nincs még task."));
+    tasksOutput.appendChild(createTextElement("p", "No tasks yet."));
     return;
   }
 
@@ -226,20 +226,20 @@ function renderTasks(tasks) {
     card.className = "task-card";
 
     card.appendChild(createTextElement("h3", task.title));
-    card.appendChild(createTextElement("p", `Description: ${task.description || "Nincs leírás"}`));
+    card.appendChild(createTextElement("p", `Description: ${task.description || "No description"}`));
 
-    const status = createTextElement("p", task.is_done ? "Kész" : "Nincs kész", `task-status ${task.is_done ? "task-done" : "task-not-done"}`);
+    const status = createTextElement("p", task.is_done ? "Done" : "Not done", `task-status ${task.is_done ? "task-done" : "task-not-done"}`);
     card.appendChild(status);
 
     const toggleButton = document.createElement("button");
     toggleButton.type = "button";
-    toggleButton.textContent = task.is_done ? "Jelöld nem készre" : "Jelöld készre";
+    toggleButton.textContent = task.is_done ? "Mark as not done" : "Mark as done";
     toggleButton.addEventListener("click", () => toggleTask(task.id));
     card.appendChild(toggleButton);
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
-    deleteButton.textContent = "Törlés";
+    deleteButton.textContent = "Delete";
     deleteButton.className = "danger-btn";
     deleteButton.addEventListener("click", () => deleteTask(task.id));
     card.appendChild(deleteButton);
