@@ -1,255 +1,317 @@
-# Task Manager v2
+# TradingBot
 
-A Python Flask-based task management application built as a junior backend / web development portfolio project.
+![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
+![Market](https://img.shields.io/badge/Market-BTCUSDC%20Spot-F0B90B?logo=binance&logoColor=black)
+![Mode](https://img.shields.io/badge/Execution-Shadow%20Only-success)
+![Tests](https://img.shields.io/badge/Tests-700%2B-brightgreen)
 
-The goal of this project is to demonstrate practical backend fundamentals: user authentication, JWT-protected routes, user-scoped CRUD operations, SQL persistence, frontend-backend communication, and a clean Route / Service / Repository project structure.
+Research-grade crypto trading platform focused on **causal backtesting, reproducible quantitative research, market microstructure and safe live-market execution infrastructure**.
 
-## Why I Built This
+**Primary market:** BTCUSDC Spot  
+**Timeframe:** 15m  
+**Direction:** Long-only
 
-I built this project to practice the full flow of a small web application: registering users, authenticating them with JWT tokens, storing data in a database, protecting endpoints, and allowing each user to manage only their own tasks.
+> **Current status:** live public-market observation and shadow execution only.  
+> Real-money order execution is disabled. No validated profitable trading edge is claimed.
 
-The focus was not only on making the application work, but also on understanding how backend code can be structured, how responsibilities can be separated between routes, services, and repositories, and how a frontend communicates with a JSON-based API.
+---
 
-This project helped me move from simply learning syntax to understanding how different parts of a web application work together.
+## Overview
 
-## Main Features 
+TradingBot is built to answer a harder question than _“can I create a profitable backtest?”_:
 
-- User registration
-- Password hashing with Werkzeug
-- Login with JWT token authentication
-- Protected task endpoints
-- User-specific task listing
-- Task creation
-- Task completion status toggle
-- Task deletion
-- Simple HTML, CSS, and JavaScript frontend
-- Basic admin dashboard
-- Login event logging
-- SQLite database
-- Route / Service / Repository layered structure
+**Can a trading signal survive realistic costs, causal validation, independent testing and prospective market data?**
 
-## Screenshots
+The project deliberately separates data collection, research, simulation and live runtime components so failed hypotheses can be rejected without contaminating future validation.
 
-### Home / Authentication Page
+---
 
-![Home Page](screenshots/home.png)
+## Core Engineering
 
-### Task Dashboard
+### Deterministic Research & Backtesting
 
-![Task Dashboard](screenshots/tasks.png)
+- causal, chronological market replay
+- next-bar-open execution
+- realistic fees and adverse slippage
+- conservative `STOP_FIRST` ambiguous-bar handling
+- `Decimal`-safe financial accounting
+- deterministic manifests, run IDs and reports
+- preregistered hypotheses and locked blind holdout
+- independent validation and explicit consumed-data tracking
 
-### Admin Panel
+### Binance Market Data
 
-![Admin Panel](screenshots/admin.png)
+- public BTCUSDC Spot REST and WebSocket data
+- historical OHLCV
+- Spot aggregate trades
+- historical derivatives-context research
+- live Level-2 order-book collection
+- no credentials required for public-data pipelines
 
-## Tech Stack
+### Level-2 Order Book
 
-- Python
-- Flask
-- Flask-CORS
-- PyJWT
-- Werkzeug
-- SQLite
-- HTML
-- CSS
-- JavaScript
-- Git
-- GitHub
+- REST snapshot + 100ms WebSocket diff-depth synchronization
+- sequence-aware local book reconstruction
+- gap detection, reconnect and resynchronization
+- append-only raw event persistence
+- deterministic offline replay
+- spread, depth, imbalance, microprice, concentration and liquidity-flow features
+
+### Live Shadow Runtime
+
+- closed-candle-only strategy evaluation
+- runtime states: `STARTING`, `SYNCING`, `READY`, `STALE`, `RECOVERING`, `STOPPED`
+- stale-data and gap protection
+- duplicate-candle suppression
+- restart-safe persistent state
+- hash-chained decision journal
+- deterministic recovery
+- **zero order execution**
+
+---
+
+## Architecture
+
+```text
+                 Binance PUBLIC Market Data
+                           │
+            ┌──────────────┼──────────────┐
+            │              │              │
+          OHLCV        aggTrades       Spot L2
+            │              │              │
+            └──────────────┼──────────────┘
+                           ▼
+                 Validation / Persistence
+                           │
+              ┌────────────┴────────────┐
+              ▼                         ▼
+     Deterministic Backtesting     L2 Reconstruction
+              │                         │
+              ▼                         ▼
+       Research Framework       Microstructure Features
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+                 Prospective Validation
+                           │
+                           ▼
+                    Shadow Runtime
+                           │
+                           ▼
+                    ORDERS DISABLED
+```
+
+---
+
+## Research Status
+
+| Research branch | Result |
+|---|---|
+| Breakout | Not supported after realistic costs |
+| Mean reversion | Not supported |
+| Multi-timeframe continuation | Positive frictionless expectancy, negative after costs |
+| Spot aggTrades | Signal exhausted / not supported |
+| Derivatives context | Independent validation failed; branch closed |
+| **V9 Spot L2 microstructure** | **Prospective research in progress** |
+
+Failed hypotheses remain part of the project history instead of being hidden or post-hoc optimized.
+
+---
+
+## V9 — Prospective L2 Research
+
+The current research branch tests whether BTCUSDC Spot order-book microstructure contains stable information about future price movement.
+
+Its protocol was frozen **before eligible prospective data was evaluated**.
+
+The experiment uses:
+
+- predefined L2 feature set
+- 1-second causal sampling
+- +30 second primary forward mid-price target
+- chronological session-blocked out-of-sample evaluation
+- Ridge regression
+- constant baseline comparison
+- permutation testing
+- predefined stability gates
+
+Predictive evaluation is programmatically refused until the preregistered data-readiness and integrity gates pass.
+
+---
+
+## Safety Boundaries
+
+```text
+Real orders        DISABLED
+Withdrawals        DISABLED
+Margin             DISABLED
+Leverage           DISABLED
+Short selling      DISABLED
+Live credentials   NOT REQUIRED
+Blind holdout      LOCKED
+```
+
+Research and public-market components are intentionally isolated from authenticated execution.
+
+---
+
+## Quick Start
+
+### Windows PowerShell
+
+```powershell
+git clone https://github.com/GordonBlo/TradingBot.git
+cd TradingBot
+
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+python -m pip install -r requirements.txt
+python -m pytest -ra
+```
+
+Run a bounded public-market shadow session:
+
+```powershell
+python -m src.cli.run_shadow_runtime --smoke-seconds 60
+```
+
+The shadow runtime observes real public BTCUSDC market data while remaining physically separated from order execution.
+
+---
 
 ## Project Structure
 
 ```text
-task_manager/
-├── app.py
-├── config.py
-├── requirements.txt
-├── .env.example
-├── database/
-│   ├── db.py
-│   └── schema.sql
-├── frontend/
-│   ├── index.html
-│   ├── app.js
-│   ├── style.css
-│   ├── admin.html
-│   ├── admin.js
-│   └── admin.css
-├── models/
-│   ├── user.py
-│   └── task.py
-├── repositories/
-├── routes/
-├── services/
-└── utils/
+src/
+├── analysis/       # indicators and causal analytics
+├── backtest/       # deterministic execution simulation
+├── diagnostics/    # post-trade and signal diagnostics
+├── derivatives/    # historical derivatives context
+├── exchange/       # Binance public market-data boundary
+├── historical/     # validated historical datasets
+├── orderflow/      # Spot aggregate-trade research
+├── orderbook/      # L2 reconstruction and features
+├── research/       # research and validation framework
+├── runtime/        # live shadow state machine
+├── strategy/       # strategy implementations
+└── risk/           # risk foundations
+
+research/            # frozen preregistration manifests
+tests/               # deterministic automated test suite
 ```
 
-## Architecture Overview
+---
 
-The project follows a simple layered structure:
+## Research Principles
 
-- **Routes** handle HTTP requests and responses.
-- **Services** contain the main business logic and validation flow.
-- **Repositories** handle database operations.
-- **Models** represent the main application entities.
-- **Utils** contain reusable helper logic such as JWT handling.
-- **Frontend files** communicate with the backend through JSON requests.
+**No look-ahead. No silent parameter optimization. No future-data leakage.**
 
-This structure helped me understand how to keep route handlers smaller, separate business logic from database logic, and make the project easier to reason about as it grows.
+**No rewriting failed hypotheses. No pretending consumed data is fresh OOS.**
 
-## Running Locally
+**No ignoring transaction costs. No live orders before validated evidence.**
 
-### 1. Clone the repository
+The objective is not to manufacture an attractive equity curve — it is to determine whether an observable market edge actually survives rigorous testing.
 
-```bash
-git clone https://github.com/GordonBlo/task-manager-flask-jwt.git
-cd task-manager-flask-jwt
-```
+---
 
-### 2. Create a virtual environment
+## Security
 
-```bash
-python -m venv .venv
-```
+Sensitive credentials and generated research artifacts are intentionally excluded from version control.
 
-### 3. Activate the virtual environment on Windows
+Repository safeguards include:
 
-```bash
-.venv\Scripts\activate
-```
+- `.env` excluded from Git
+- API keys and secrets excluded
+- private keys excluded
+- raw market datasets excluded
+- generated reports excluded
+- public Binance market-data clients operate without authentication
+- complete Git history scanned with Gitleaks
 
-### 4. Install the dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 5. Start the application
-
-```bash
-python app.py
-```
-
-### 6. Open the application in the browser
+Latest repository secret scan:
 
 ```text
-http://127.0.0.1:5000/
+70 commits scanned
+No leaks found
 ```
 
-Admin page:
+---
+
+## Testing
+
+The project contains an extensive deterministic automated test suite covering:
+
+- execution semantics
+- causal strategy evaluation
+- historical dataset integrity
+- order-book reconstruction
+- sequence-gap handling
+- deterministic replay
+- L2 feature generation
+- research preregistration
+- session eligibility
+- live runtime state transitions
+- stale-data protection
+- duplicate suppression
+- restart recovery
+- shadow logging
+- zero-order guarantees
+
+Current project status: **700+ automated tests**.
+
+---
+
+## Roadmap
 
 ```text
-http://127.0.0.1:5000/admin
+Prospective L2 Data
+        ↓
+Information Diagnostic
+        ↓
+Independent Validation
+        ↓
+Candidate Strategy
+        ↓
+Long-running Shadow / Paper Validation
+        ↓
+Execution + Risk Engine
+        ↓
+Controlled Test Execution
+        ↓
+Small-capital live validation only if justified
 ```
 
-## API Endpoints
+Real-money execution will not be enabled solely because a historical backtest performs well.
 
-### Authentication
+---
 
-```text
-POST /api/auth/register
-POST /api/auth/login
-```
+## Research History
 
-### Tasks
+Earlier research iterations include:
 
-```text
-GET    /api/tasks/
-POST   /api/tasks/
-GET    /api/tasks/<task_id>
-PUT    /api/tasks/<task_id>
-PATCH  /api/tasks/<task_id>/toggle
-DELETE /api/tasks/<task_id>
-```
+- deterministic baseline strategy research
+- volatility and trend-regime diagnostics
+- breakout research
+- mean-reversion research
+- multi-timeframe continuation
+- Spot aggregate-trade order-flow research
+- derivatives-context discovery
+- independent historical validation
+- prospective Spot L2 microstructure research
 
-### Admin
+Several branches were explicitly closed after failing predefined validation gates.
 
-```text
-GET /api/admin/users
-GET /api/admin/logs
-GET /api/admin/tasks
-```
+This is intentional.
 
-Admin endpoints require a user account where `is_admin = 1` in the database.
+TradingBot is designed to reject unsupported hypotheses rather than repeatedly optimize them until a profitable backtest appears.
 
-## Manual Testing
+---
 
-The main application flows were manually tested through the browser and API behavior:
+## Disclaimer
 
-- Registering a new user
-- Logging in and receiving a JWT token
-- Creating tasks for the authenticated user
-- Listing only the current user's tasks
-- Toggling task completion status
-- Deleting user-owned tasks
-- Checking that task operations are scoped to the authenticated user
-- Verifying login activity logs in the admin panel
+TradingBot is a software-engineering and quantitative-research project.
 
-Although automated tests are not implemented yet, this project was built with a focus on understanding the expected behavior of each feature and manually checking the most important user flows.
+It is **not financial advice**, does not guarantee profitability and currently does not execute real-money trades.
 
-## Security Principles
-
-This project includes several basic security-focused practices:
-
-- Passwords are not stored in plain text.
-- Password hashing is handled with Werkzeug.
-- The backend identifies the current user based on the JWT token.
-- Protected task endpoints require authentication.
-- Task operations include user ownership checks.
-- A user should only be able to view, update, or delete their own tasks.
-- The frontend avoids directly rendering user-provided task content through raw `innerHTML` where possible.
-
-This is not a production-ready security implementation, but it demonstrates important backend security fundamentals for a junior-level portfolio project.
-
-## AI-Assisted Development
-
-I used AI tools as a learning and productivity assistant while building this project.
-
-AI helped me reason through backend structure, authentication flow, debugging errors, HTTP status codes, frontend-backend communication, and the separation between routes, services, and repository logic.
-
-I did not treat AI-generated suggestions as automatically correct. I verified the implementation by running the application, testing the main flows manually, checking database behavior, reviewing the code step by step, and making sure I understood why each part worked.
-
-This made the development process faster, but more importantly, it helped me understand the system more deeply instead of only copying code.
-
-## What This Project Demonstrates
-
-This project demonstrates my understanding of:
-
-- Flask routes and HTTP methods
-- REST API fundamentals
-- User registration and login flow
-- JWT-based authentication
-- User-scoped authorization logic
-- SQL CRUD operations
-- Password hashing
-- Layered backend structure
-- Basic frontend-backend communication
-- Manual testing of core application flows
-- Git and GitHub project presentation
-- AI-assisted debugging and learning
-
-## Future Improvements
-
-Planned improvements for this project include:
-
-- Add unit tests for services and repository functions
-- Add integration tests for authentication and protected task endpoints
-- Add task editing from the frontend
-- Add task priority field
-- Add due date field
-- Add search and filtering
-- Improve the UI with Bootstrap or Tailwind CSS
-- Add PostgreSQL support
-- Deploy the project to Render or Railway
-- Improve admin permission management
-- Add better error messages and form validation
-
-## Project Status
-
-This project is currently a junior portfolio project. It is not intended to be a production-ready application, but it demonstrates practical backend and web development fundamentals through a complete, working example.
-
-## Author
-
-**Richard Peter André**
-
-- GitHub: [github.com/GordonBlo](https://github.com/GordonBlo)
-- LinkedIn: [linkedin.com/in/richard-peter-andre-097b3b24a](https://www.linkedin.com/in/richard-peter-andre-097b3b24a)
+Cryptocurrency trading involves substantial financial risk.
